@@ -1,4 +1,40 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                /* Портфолио - Ч/Б по умолчанию, цвет при наведении */
+.portfolio-item img {
+    filter: grayscale(100%);
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+}
+
+.portfolio-item:hover img {
+    transform: scale(1.05);
+    filter: grayscale(0%);
+}
+
+/* О студии - Ч/Б по умолчанию, цвет при наведении */
+.about-image {
+    filter: grayscale(100%);
+    transition: filter 1s ease;
+}
+
+.about-image:hover {
+    filter: grayscale(0%);
+}
+
+
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="ru" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -115,12 +151,12 @@
             overflow: hidden;
         }
         
+        /* Portfolio Images - Black & White by default, Color on Hover */
         .portfolio-item img {
             transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
             filter: grayscale(100%);
         }
         
-        .portfolio-item.in-view img,
         .portfolio-item:hover img {
             transform: scale(1.05);
             filter: grayscale(0%);
@@ -762,6 +798,16 @@
             width: 100vw;
             height: 100vh;
         }
+
+        /* About Section Image - Grayscale to Color on Hover */
+        .about-image {
+            filter: grayscale(100%);
+            transition: filter 1s ease;
+        }
+
+        .about-image:hover {
+            filter: grayscale(0%);
+        }
     </style>
 </head>
 <body class="bg-black text-white antialiased">
@@ -904,7 +950,7 @@
                 <div class="reveal-right">
                     <div class="relative group">
                         <div class="absolute inset-0 border border-white/10 transform translate-x-3 md:translate-x-4 translate-y-3 md:translate-y-4 transition-transform group-hover:translate-x-2 group-hover:translate-y-2"></div>
-                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop" alt="Studio" class="w-full aspect-[4/5] object-cover about-image grayscale group-hover:grayscale-0 transition-all duration-1000 relative z-10">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop" alt="Studio" class="w-full aspect-[4/5] object-cover about-image relative z-10">
                     </div>
                 </div>
             </div>
@@ -1469,45 +1515,6 @@
             }
         });
 
-        // Portfolio Gallery - Scroll-based color effect
-        const portfolioObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('in-view');
-                } else {
-                    entry.target.classList.remove('in-view');
-                }
-            });
-        }, {
-            threshold: 0.3,
-            rootMargin: '-10% 0px -10% 0px'
-        });
-
-        document.querySelectorAll('.portfolio-item').forEach(item => {
-            portfolioObserver.observe(item);
-        });
-
-        // About Section Image - Scroll-based grayscale effect
-        const aboutImageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const image = entry.target.querySelector('.about-image');
-                if (image) {
-                    if (entry.isIntersecting) {
-                        image.classList.remove('grayscale');
-                    } else {
-                        image.classList.add('grayscale');
-                    }
-                }
-            });
-        }, {
-            threshold: 0.5
-        });
-
-        const aboutSection = document.getElementById('about');
-        if (aboutSection) {
-            aboutImageObserver.observe(aboutSection);
-        }
-
         // WebGL Three.js Setup - Modern Chair
         let webGLInitialized = false;
         let camera, scene, renderer, chairGroup;
@@ -1939,3 +1946,11 @@
 </body>
 </html>
 
+
+
+              <script>
+                              
+              </script>
+                        </body>
+                        </html>
+                    

@@ -786,6 +786,33 @@
         .about-image:hover {
             filter: grayscale(0%);
         }
+	/* Добавь это в конец <style> */
+	.loading-overlay {
+   	 position: absolute;
+  	  top: 0;
+  	  left: 0;
+  	  width: 100%;
+   	 height: 100%;
+   	 display: flex;
+   	 align-items: center;
+   	 justify-content: center;
+   	 background: rgba(0,0,0,0.8);
+   	 z-index: 10;
+	}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #f59e0b;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
     </style>
 </head>
 <body class="bg-black text-white antialiased">
@@ -1037,7 +1064,11 @@
                             </div>
 
                             <canvas id="webgl-canvas"></canvas>
-
+    <!-- 🔥 LOADING OVERLAY (добавь это) -->
+    <div class="loading-overlay" id="modelLoader" style="display: flex;">
+        <div class="loading-spinner"></div>
+    </div>
+    <!-- 🔥 КОНЕЦ LOADING OVERLAY -->
                             <!-- Material Selector Dropdowns -->
                             <div class="material-selector">
                                 <!-- Wood Dropdown -->
@@ -1503,126 +1534,88 @@
         let previousMousePosition = { x: 0, y: 0 };
         let rotationSpeed = 0.005;
 
-        const createModernChair = () => {
-            const chair = new THREE.Group();
-
-            woodMaterial = new THREE.MeshStandardMaterial({
-                color: 0x654321,
-                roughness: 0.3,
-                metalness: 0.2
-            });
-
-            fabricMaterial = new THREE.MeshStandardMaterial({
-                color: 0x2d2d2d,
-                roughness: 0.9,
-                metalness: 0.0
-            });
-
-            metalMaterial = new THREE.MeshStandardMaterial({
-                color: 0x1a1a1a,
-                roughness: 0.2,
-                metalness: 0.8
-            });
-
-            const seatGeometry = new THREE.BoxGeometry(14, 3, 12);
-            const seat = new THREE.Mesh(seatGeometry, fabricMaterial);
-            seat.position.y = 9;
-            seat.castShadow = true;
-            chair.add(seat);
-
-            const seatPadGeometry = new THREE.BoxGeometry(14.5, 1, 12.5);
-            const seatPad = new THREE.Mesh(seatPadGeometry, fabricMaterial);
-            seatPad.position.y = 10.5;
-            seatPad.castShadow = true;
-            chair.add(seatPad);
-
-            const backGeometry = new THREE.BoxGeometry(14, 14, 2);
-            const back = new THREE.Mesh(backGeometry, fabricMaterial);
-            back.position.set(0, 16, -5);
-            back.rotation.x = 0.1;
-            back.castShadow = true;
-            chair.add(back);
-
-            const backFrameGeometry = new THREE.BoxGeometry(15, 15, 1);
-            const backFrame = new THREE.Mesh(backFrameGeometry, woodMaterial);
-            backFrame.position.set(0, 16, -6);
-            backFrame.castShadow = true;
-            chair.add(backFrame);
-
-            const armrestGeometry = new THREE.BoxGeometry(2, 2, 11);
+      // Функция загрузки твоей модели с GitHub
+const loadChairModel = (onModelLoaded) => {
+    const loader = new THREE.GLTFLoader();
+    
+    // 🔗 ССЫЛКА НА ТВОЮ МОДЕЛЬ (raw.githubusercontent)
+    const modelUrl = 'https://raw.githubusercontent.com/avades-studio/avades-studio/main/3d_model/chair_corona.gltf';
+    
+    loader.load(
+        modelUrl,
+        (gltf) => {
+            const model = gltf.scene;
             
-            const leftArmrest = new THREE.Mesh(armrestGeometry, woodMaterial);
-            leftArmrest.position.set(-7.5, 10, 0);
-            leftArmrest.rotation.z = 0.1;
-            leftArmrest.castShadow = true;
-            chair.add(leftArmrest);
-
-            const rightArmrest = new THREE.Mesh(armrestGeometry, woodMaterial);
-            rightArmrest.position.set(7.5, 10, 0);
-            rightArmrest.rotation.z = -0.1;
-            rightArmrest.castShadow = true;
-            chair.add(rightArmrest);
-
-            const supportGeometry = new THREE.CylinderGeometry(1, 1, 8, 16);
+            // Настройка модели
+            model.scale.set(0.01, 0.01, 0.01); // Масштаб (подбери под свою модель)
+            model.position.set(0, -2, 0);       // Позиция
+            model.rotation.y = Math.PI;          // Поворот
             
-            const leftSupport = new THREE.Mesh(supportGeometry, metalMaterial);
-            leftSupport.position.set(-7, 5, 0);
-            leftSupport.castShadow = true;
-            chair.add(leftSupport);
-
-            const rightSupport = new THREE.Mesh(supportGeometry, metalMaterial);
-            rightSupport.position.set(7, 5, 0);
-            rightSupport.castShadow = true;
-            chair.add(rightSupport);
-
-            const legGeometry = new THREE.CylinderGeometry(1.2, 0.8, 9, 16);
-            
-            const legPositions = [
-                { x: -6, z: -5, rotZ: 0.1, rotX: 0 },
-                { x: 6, z: -5, rotZ: -0.1, rotX: 0 },
-                { x: -6, z: 5, rotZ: 0.1, rotX: 0 },
-                { x: 6, z: 5, rotZ: -0.1, rotX: 0 }
-            ];
-
-            legPositions.forEach(pos => {
-                const leg = new THREE.Mesh(legGeometry, metalMaterial);
-                leg.position.set(pos.x, 4.5, pos.z);
-                leg.rotation.z = pos.rotZ;
-                leg.rotation.x = pos.rotX;
-                leg.castShadow = true;
-                leg.receiveShadow = true;
-                chair.add(leg);
-            });
-
-            const capGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.5, 16);
-            const capMaterial = new THREE.MeshStandardMaterial({
-                color: 0x0a0a0a,
-                roughness: 0.5,
-                metalness: 0.3
-            });
-
-            legPositions.forEach(pos => {
-                const cap = new THREE.Mesh(capGeometry, capMaterial);
-                cap.position.set(pos.x, 0.25, pos.z);
-                cap.rotation.z = pos.rotZ;
-                cap.rotation.x = pos.rotX;
-                chair.add(cap);
-            });
-
-            const stitchGeometry = new THREE.TorusGeometry(5, 0.1, 8, 32);
-            const stitchMaterial = new THREE.MeshStandardMaterial({
-                color: 0x444444,
-                roughness: 0.8,
-                metalness: 0.0
+            // Включаем тени
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    
+                    // 🔍 Ищем материалы по имени для смены цвета
+                    const matName = child.material.name.toLowerCase();
+                    
+                    // 🪵 ДЕРЕВО - меняй условия под имена материалов в твоей модели
+                    if (matName.includes('wood') || matName.includes('frame') || matName.includes('дерево') || matName.includes('coronamaterial_wood')) {
+                        woodMaterial = child.material;
+                        console.log('✓ Wood material found:', child.material.name);
+                    }
+                    // 🧵 ТКАНЬ
+                    else if (matName.includes('fabric') || matName.includes('seat') || matName.includes('ткань') || matName.includes('coronamaterial_fabric')) {
+                        fabricMaterial = child.material;
+                        console.log('✓ Fabric material found:', child.material.name);
+                    }
+                    // ⚙️ МЕТАЛЛ (ножки, фурнитура)
+                    else if (matName.includes('metal') || matName.includes('leg') || matName.includes('ножка')) {
+                        metalMaterial = child.material;
+                    }
+                }
             });
             
-            const stitch = new THREE.Mesh(stitchGeometry, stitchMaterial);
-            stitch.rotation.x = Math.PI / 2;
-            stitch.position.y = 11;
-            chair.add(stitch);
-
-            return chair;
-        };
+            // Если материалы не нашли по имени - берём первые два как запасной вариант
+            if (!woodMaterial || !fabricMaterial) {
+                let count = 0;
+                model.traverse((child) => {
+                    if (child.isMesh && count < 2) {
+                        if (!woodMaterial) woodMaterial = child.material;
+                        else if (!fabricMaterial) fabricMaterial = child.material;
+                        count++;
+                    }
+                });
+            }
+            
+            // Добавляем модель в сцену
+            scene.add(model);
+            chairGroup = model; // Сохраняем ссылку для вращения
+            
+            // Скрываем лоадер
+            const loaderEl = document.getElementById('modelLoader');
+            if (loaderEl) loaderEl.style.display = 'none';
+            
+            // Вызываем коллбек если нужен
+            if (onModelLoaded) onModelLoaded(model);
+            
+            console.log('✅ Model loaded successfully');
+        },
+        (progress) => {
+            // Прогресс загрузки
+            const percent = (progress.loaded / progress.total * 100).toFixed(0);
+            console.log(`📥 Loading: ${percent}%`);
+        },
+        (error) => {
+            console.error('❌ Error loading model:', error);
+            const loaderEl = document.getElementById('modelLoader');
+            if (loaderEl) {
+                loaderEl.innerHTML = '<p class="text-red-500 text-sm">Ошибка загрузки модели</p>';
+            }
+        }
+    );
+};
 
         const initWebGL = () => {
             if (webGLInitialized) return;
@@ -1643,9 +1636,11 @@
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-            chairGroup = createModernChair();
-            chairGroup.position.y = -2;
-            scene.add(chairGroup);
+         // Загружаем модель вместо создания процедурной
+loadChairModel((model) => {
+    // Модель загружена - можно добавить доп. настройки если нужно
+    console.log('🪑 Chair model ready');
+});
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);

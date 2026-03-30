@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AVADES.STUDIO | 3D Modeling & Visualization</title>
     <script src="https://cdn.tailwindcss.com"></script>
-   <!-- Three.js for WebGL Demo -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<!-- ДОБАВЬ ВОТ ЭТИ ДВА СКРИПТА: -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- Three.js for WebGL Demo -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GLTF Loader для загрузки 3D моделей -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -132,7 +132,6 @@
             overflow: hidden;
         }
         
-        /* Portfolio Images - Black & White by default, Color on Hover */
         .portfolio-item img {
             transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
             filter: grayscale(100%);
@@ -153,7 +152,6 @@
             opacity: 1;
         }
 
-        /* Category Badge - Mobile Only */
         .category-badge {
             position: absolute;
             top: 8px;
@@ -233,39 +231,6 @@
             width: 100%;
         }
 
-        .btn-primary {
-            position: relative;
-            overflow: hidden;
-            background: white;
-            color: black;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 1;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #ccc;
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: -1;
-        }
-
-        .btn-primary:hover {
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-primary:hover::before {
-            transform: scaleX(1);
-            transform-origin: left;
-        }
-
         .btn-secondary {
             position: relative;
             overflow: hidden;
@@ -273,11 +238,13 @@
             color: white;
             transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(5px);
+            background: transparent;
         }
 
         .btn-secondary:hover {
             border-color: white;
             background: rgba(255,255,255,0.05);
+            transform: translateY(-2px);
         }
 
         .btn-secondary i {
@@ -362,10 +329,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-        }
-
-        .accent-text {
-            color: #f59e0b;
         }
 
         .noise {
@@ -467,6 +430,7 @@
             height: 400px;
             background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
             border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
             overflow: hidden;
         }
 
@@ -490,7 +454,7 @@
             transform: translateX(-50%);
             display: flex;
             gap: 8px;
-            z-index: 20;
+            z-index: 30;
         }
 
         @media (min-width: 768px) {
@@ -511,6 +475,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         @media (min-width: 768px) {
@@ -520,27 +486,15 @@
             }
         }
 
-        .webgl-controls button .tooltip {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.8);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 9px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            margin-bottom: 8px;
+        .webgl-controls button:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+            transform: translateY(-2px);
         }
 
-        .webgl-controls button:hover .tooltip {
-            opacity: 1;
-            visibility: visible;
+        .webgl-controls button.active {
+            background: rgba(245, 158, 11, 0.3);
+            border-color: #f59e0b;
         }
 
         .material-selector {
@@ -550,7 +504,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            z-index: 20;
+            z-index: 30;
         }
 
         @media (min-width: 768px) {
@@ -581,7 +535,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            cursor: none;
+            cursor: pointer;
             font-size: 9px;
             letter-spacing: 0.15em;
             text-transform: uppercase;
@@ -619,7 +573,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            cursor: none;
+            cursor: pointer;
             transition: background 0.3s ease;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
@@ -685,7 +639,7 @@
             font-size: 9px;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            z-index: 20;
+            z-index: 30;
         }
 
         @media (min-width: 768px) {
@@ -760,27 +714,6 @@
             }
         }
 
-        .webgl-container:-webkit-full-screen {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .webgl-container:-moz-full-screen {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .webgl-container:-ms-fullscreen {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .webgl-container:fullscreen {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* About Section Image - Grayscale to Color on Hover */
         .about-image {
             filter: grayscale(100%);
             transition: filter 1s ease;
@@ -789,33 +722,34 @@
         .about-image:hover {
             filter: grayscale(0%);
         }
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.9);
-    z-index: 50;
-    border-radius: 12px;
-}
 
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255,255,255,0.1);
-    border-top-color: #f59e0b;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
+        /* Loading Overlay for 3D Model */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.9);
+            z-index: 50;
+            border-radius: 12px;
+        }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #f59e0b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
 
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-black text-white antialiased">
@@ -842,24 +776,22 @@
     <nav class="fixed w-full z-50 bg-black/20 backdrop-blur-md border-b border-white/5 transition-all duration-500" id="navbar">
         <div class="max-w-[1800px] mx-auto px-4 py-4 md:px-8 md:py-6">
             <div class="flex items-center justify-between">
-                <a href="#" class="studio-name text-lg md:text-2xl font-bold tracking-[0.3em] text-white magnetic" data-hover>
+                <a href="#" class="studio-name text-lg md:text-2xl font-bold tracking-[0.3em] text-white">
                     AVADES<span class="text-gray-600">.STUDIO</span>
                 </a>
                 
                 <div class="hidden md:flex items-center space-x-8 lg:space-x-12">
-                    <a href="#about" class="nav-link text-xs tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors magnetic" data-hover>О студии</a>
-                    <a href="#ue5" class="nav-link text-xs tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors magnetic" data-hover>Виртуальный тур</a>
-                    <a href="#portfolio" class="nav-link text-xs tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors magnetic" data-hover>Портфолио</a>
-                    <a href="#services" class="nav-link text-xs tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors magnetic" data-hover>Услуги</a>
+                    <a href="#about" class="nav-link text-xs tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors">О студии</a>
+                    <a href="#ue5" class="nav-link text-xs tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors">Виртуальный тур</a>
+                    <a href="#portfolio" class="nav-link text-xs tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors">Портфолио</a>
+                    <a href="#services" class="nav-link text-xs tracking-[0.2em] uppercase text-gray-400 hover:text-white transition-colors">Услуги</a>
                 </div>
 
-                <div class="hidden md:block">
-                    <a href="#contact" class="lux-button border border-white/20 px-6 py-3 text-xs tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-500 magnetic" data-hover>
-                        Связаться
-                    </a>
-                </div>
+                <a href="#contact" class="hidden md:block border border-white/20 px-6 py-3 text-xs tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-500">
+                    Связаться
+                </a>
 
-                <button id="mobileMenuBtn" class="md:hidden text-white magnetic" data-hover>
+                <button id="mobileMenuBtn" class="md:hidden text-white">
                     <i class="ri-menu-line text-2xl"></i>
                 </button>
             </div>
@@ -868,7 +800,7 @@
 
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu" id="mobileMenu">
-        <button id="closeMobileMenu" class="absolute top-6 right-6 text-white magnetic" data-hover>
+        <button id="closeMobileMenu" class="absolute top-6 right-6 text-white">
             <i class="ri-close-line text-4xl"></i>
         </button>
         <a href="#about" class="mobile-link">О студии</a>
@@ -897,15 +829,15 @@
                 Создаём фотореалистичные 3D решения для архитекторов, дизайнеров и производителей премиум-сегмента
             </p>
             <div class="flex flex-col sm:flex-row gap-3 md:gap-6 justify-center items-center reveal mb-8 md:mb-0">
-                <a href="#portfolio" class="btn-secondary px-6 py-3 md:px-12 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-2 md:gap-3 w-full sm:w-auto magnetic" data-hover>
+                <a href="#portfolio" class="btn-secondary px-6 py-3 md:px-12 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-2 md:gap-3 w-full sm:w-auto">
                     <i class="ri-gallery-line text-base md:text-lg"></i>
                     <span>Смотреть работы</span>
                 </a>
-                <a href="#ue5" class="btn-secondary px-6 py-3 md:px-12 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-2 md:gap-3 w-full sm:w-auto magnetic" data-hover>
+                <a href="#ue5" class="btn-secondary px-6 py-3 md:px-12 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-2 md:gap-3 w-full sm:w-auto">
                     <i class="ri-gamepad-line text-base md:text-lg"></i>
                     <span>Виртуальный тур</span>
                 </a>
-                <button id="watchVideoBtn" class="btn-secondary px-6 py-3 md:px-12 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-2 md:gap-3 w-full sm:w-auto magnetic" data-hover>
+                <button id="watchVideoBtn" class="btn-secondary px-6 py-3 md:px-12 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase flex items-center justify-center gap-2 md:gap-3 w-full sm:w-auto">
                     <i class="ri-play-circle-line text-base md:text-lg"></i>
                     <span>Смотреть видео</span>
                 </button>
@@ -957,7 +889,7 @@
                 </div>
                 <div class="reveal-right">
                     <div class="relative group">
-                        <div class="absolute inset-0 border border-white/10 transform translate-x-3 md:translate-x-4 translate-y-3 md:translate-y-4 transition-transform group-hover:translate-x-2 group-hover:translate-y-2"></div>
+                        <div class="absolute inset-0 border border-white/10 transform translate-x-3 md:translate-x-4 translate-y-3 md:translate-y-4 transition-transform"></div>
                         <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop" alt="Studio" class="w-full aspect-[4/5] object-cover about-image relative z-10">
                     </div>
                 </div>
@@ -1011,14 +943,14 @@
                 </div>
             </div>
 
-            <!-- WebGL Configurator with Modern Chair -->
+            <!-- WebGL Configurator -->
             <div class="bg-white/5 backdrop-blur-sm border border-white/10 p-4 md:p-12 lg:p-20 reveal">
                 <div class="grid lg:grid-cols-2 gap-8 md:gap-16 items-center">
                     <div>
                         <p class="text-gray-600 text-[9px] md:text-[10px] tracking-[0.5em] uppercase mb-6 md:mb-8">ДЛЯ ПРОИЗВОДИТЕЛЕЙ</p>
                         <h3 class="text-xl md:text-4xl lg:text-5xl font-light mb-4 md:mb-8">Конфигураторы <span class="gradient-text">продукции</span></h3>
                         <p class="text-gray-400 font-light leading-relaxed mb-6 md:mb-12 text-sm md:text-lg">
-                            Увеличьте конверсию и уменьшите количество возвратов с помощью интерактивного конфигуратора. Позвольте клиентам увидеть ваш продукт во всех возможных вариантах ещё до покупки.
+                            Увеличьте конверсию и уменьшите количество возвратов с помощью интерактивного конфигуратора.
                         </p>
                         
                         <div class="space-y-4 md:space-y-8">
@@ -1028,7 +960,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium mb-1 md:mb-2 tracking-wider text-sm md:text-base">Выбор материалов</h4>
-                                    <p class="text-gray-500 text-xs md:text-sm font-light">Мгновенная замена обивки, цвета, фурнитуры в реальном времени</p>
+                                    <p class="text-gray-500 text-xs md:text-sm font-light">Мгновенная замена в реальном времени</p>
                                 </div>
                             </div>
                             
@@ -1038,7 +970,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium mb-1 md:mb-2 tracking-wider text-sm md:text-base">360° просмотр</h4>
-                                    <p class="text-gray-500 text-xs md:text-sm font-light">Полный контроль над ракурсом — вращение, зум, детальный осмотр</p>
+                                    <p class="text-gray-500 text-xs md:text-sm font-light">Полный контроль над ракурсом</p>
                                 </div>
                             </div>
 
@@ -1048,32 +980,33 @@
                                 </div>
                                 <div>
                                     <h4 class="text-white font-medium mb-1 md:mb-2 tracking-wider text-sm md:text-base">WebGL Технология</h4>
-                                    <p class="text-gray-500 text-xs md:text-sm font-light">Работает прямо в браузере без установки плагинов</p>
+                                    <p class="text-gray-500 text-xs md:text-sm font-light">Работает прямо в браузере</p>
                                 </div>
                             </div>
                         </div>
 
-                        <a href="#contact" class="btn-secondary inline-flex items-center gap-3 md:gap-4 mt-6 md:mt-12 px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase magnetic" data-hover>
+                        <a href="#contact" class="btn-secondary inline-flex items-center gap-3 md:gap-4 mt-6 md:mt-12 px-6 md:px-10 py-3 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase">
                             <span>Заказать конфигуратор</span>
                             <i class="ri-arrow-right-line text-sm md:text-base"></i>
                         </a>
                     </div>
                     
                     <div class="reveal-right">
-                      <div class="webgl-container group" id="webglContainer">
-   			 <div class="streaming-badge">
-        			<div class="streaming-dot"></div>
-       			 <span>WebGL Configurator</span>
-    </div>
+                        <div class="webgl-container" id="webglContainer">
+                            <div class="streaming-badge">
+                                <div class="streaming-dot"></div>
+                                <span>WebGL Configurator</span>
+                            </div>
 
-    <canvas id="webgl-canvas"></canvas>
-    
-    <div class="loading-overlay" id="modelLoader" style="display: flex;">
-        <div class="loading-spinner"></div>
-    </div>
-                            <!-- Material Selector Dropdowns -->
+                            <canvas id="webgl-canvas"></canvas>
+                            
+                            <!-- Loading Overlay -->
+                            <div class="loading-overlay" id="modelLoader" style="display: flex;">
+                                <div class="loading-spinner"></div>
+                            </div>
+                            
+                            <!-- Material Selector -->
                             <div class="material-selector">
-                                <!-- Wood Dropdown -->
                                 <div class="material-dropdown" id="woodDropdown">
                                     <div class="material-dropdown-header" onclick="toggleDropdown('woodDropdown')">
                                         <span>🪵 Дерево</span>
@@ -1103,7 +1036,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Fabric Dropdown -->
                                 <div class="material-dropdown" id="fabricDropdown">
                                     <div class="material-dropdown-header" onclick="toggleDropdown('fabricDropdown')">
                                         <span>🧵 Ткань</span>
@@ -1135,21 +1067,17 @@
                             </div>
 
                             <div class="webgl-controls">
-                                <button data-hover id="rotateBtn">
-                                    <i class="ri-rotate-line text-sm md:text-lg"></i>
-                                    <span class="tooltip">Авто-вращение</span>
+                                <button id="rotateBtn" title="Авто-вращение">
+                                    <i class="ri-rotate-line"></i>
                                 </button>
-                                <button data-hover id="zoomInBtn">
-                                    <i class="ri-add-line text-sm md:text-lg"></i>
-                                    <span class="tooltip">Приблизить</span>
+                                <button id="zoomInBtn" title="Приблизить">
+                                    <i class="ri-add-line"></i>
                                 </button>
-                                <button data-hover id="zoomOutBtn">
-                                    <i class="ri-subtract-line text-sm md:text-lg"></i>
-                                    <span class="tooltip">Отдалить</span>
+                                <button id="zoomOutBtn" title="Отдалить">
+                                    <i class="ri-subtract-line"></i>
                                 </button>
-                                <button data-hover id="fullscreenBtn">
-                                    <i class="ri-fullscreen-line text-sm md:text-lg"></i>
-                                    <span class="tooltip">Полный экран</span>
+                                <button id="fullscreenBtn" title="Полный экран">
+                                    <i class="ri-fullscreen-line"></i>
                                 </button>
                             </div>
                         </div>
@@ -1171,15 +1099,14 @@
                     <p class="text-gray-600 text-[9px] md:text-[10px] tracking-[0.5em] uppercase mb-3 md:mb-4">ПОРТФОЛИО</p>
                     <h2 class="text-2xl md:text-5xl lg:text-6xl font-light">Избранные <span class="gradient-text">работы</span></h2>
                 </div>
-                <a href="#" class="hidden md:flex items-center gap-4 text-xs tracking-[0.2em] uppercase text-gray-500 hover:text-white transition-colors mt-6 md:mt-0 magnetic" data-hover>
+                <a href="#" class="hidden md:flex items-center gap-4 text-xs tracking-[0.2em] uppercase text-gray-500 hover:text-white transition-colors mt-6 md:mt-0">
                     <span>Все проекты</span>
                     <i class="ri-arrow-right-line"></i>
                 </a>
             </div>
 
             <div class="grid md:grid-cols-2 gap-4 md:gap-8">
-                <!-- Item 1 - Interior -->
-                <div class="portfolio-item reveal" data-category="interior">
+                <div class="portfolio-item reveal">
                     <div class="aspect-[4/3] relative">
                         <span class="category-badge interior">
                             <i class="ri-home-line"></i>
@@ -1193,8 +1120,7 @@
                     </div>
                 </div>
 
-                <!-- Item 2 - Exterior -->
-                <div class="portfolio-item reveal" style="transition-delay: 100ms;" data-category="exterior">
+                <div class="portfolio-item reveal" style="transition-delay: 100ms;">
                     <div class="aspect-[4/3] relative">
                         <span class="category-badge exterior">
                             <i class="ri-building-line"></i>
@@ -1208,8 +1134,7 @@
                     </div>
                 </div>
 
-                <!-- Item 3 - UE5 -->
-                <div class="portfolio-item reveal" data-category="ue5">
+                <div class="portfolio-item reveal">
                     <div class="aspect-[4/3] relative">
                         <span class="category-badge ue5">
                             <i class="ri-gamepad-line"></i>
@@ -1223,8 +1148,7 @@
                     </div>
                 </div>
 
-                <!-- Item 4 - Product -->
-                <div class="portfolio-item reveal" style="transition-delay: 100ms;" data-category="product">
+                <div class="portfolio-item reveal" style="transition-delay: 100ms;">
                     <div class="aspect-[4/3] relative">
                         <span class="category-badge product">
                             <i class="ri-camera-line"></i>
@@ -1237,13 +1161,6 @@
                         <h3 class="text-base md:text-2xl font-medium studio-name tracking-wider">Парфюмерия Éclat</h3>
                     </div>
                 </div>
-            </div>
-            
-            <div class="text-center mt-8 md:mt-12 md:hidden reveal">
-                <a href="#" class="inline-flex items-center gap-4 text-xs tracking-[0.2em] uppercase text-gray-500 hover:text-white transition-colors magnetic" data-hover>
-                    <span>Все проекты</span>
-                    <i class="ri-arrow-right-line"></i>
-                </a>
             </div>
         </div>
     </section>
@@ -1319,33 +1236,33 @@
                     <h2 class="text-2xl md:text-5xl lg:text-6xl font-light mb-6 md:mb-12">Обсудим ваш <span class="gradient-text">проект</span></h2>
                     
                     <div class="space-y-4 md:space-y-8 mb-8 md:mb-16">
-                        <a href="mailto:hello@avades.studio" class="flex items-center gap-3 md:gap-6 group magnetic" data-hover>
+                        <a href="mailto:hello@avades.studio" class="flex items-center gap-3 md:gap-6 group">
                             <div class="w-8 h-8 md:w-12 md:h-12 border border-white/20 rounded-full flex items-center justify-center group-hover:border-white transition-colors">
                                 <i class="ri-mail-send-line text-sm md:text-base"></i>
                             </div>
                             <div>
                                 <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-gray-600 mb-1">Email</p>
-                                <p class="text-sm md:text-lg font-light group-hover:text-gray-300 transition-colors">hello@avades.studio</p>
+                                <p class="text-sm md:text-lg font-light">hello@avades.studio</p>
                             </div>
                         </a>
                         
-                        <a href="https://t.me/AVADES_STUDIO" target="_blank" class="flex items-center gap-3 md:gap-6 group magnetic" data-hover>
+                        <a href="https://t.me/AVADES_STUDIO" target="_blank" class="flex items-center gap-3 md:gap-6 group">
                             <div class="w-8 h-8 md:w-12 md:h-12 border border-white/20 rounded-full flex items-center justify-center group-hover:border-white transition-colors">
                                 <i class="ri-telegram-line text-sm md:text-base"></i>
                             </div>
                             <div>
                                 <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-gray-600 mb-1">Telegram</p>
-                                <p class="text-sm md:text-lg font-light group-hover:text-gray-300 transition-colors">@AVADES_STUDIO</p>
+                                <p class="text-sm md:text-lg font-light">@AVADES_STUDIO</p>
                             </div>
                         </a>
 
-                        <a href="https://www.instagram.com/avades.studio/" target="_blank" class="flex items-center gap-3 md:gap-6 group magnetic" data-hover>
+                        <a href="https://www.instagram.com/avades.studio/" target="_blank" class="flex items-center gap-3 md:gap-6 group">
                             <div class="w-8 h-8 md:w-12 md:h-12 border border-white/20 rounded-full flex items-center justify-center group-hover:border-white transition-colors">
                                 <i class="ri-instagram-line text-sm md:text-base"></i>
                             </div>
                             <div>
                                 <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase text-gray-600 mb-1">Instagram</p>
-                                <p class="text-sm md:text-lg font-light group-hover:text-gray-300 transition-colors">@avades.studio</p>
+                                <p class="text-sm md:text-lg font-light">@avades.studio</p>
                             </div>
                         </a>
                     </div>
@@ -1360,7 +1277,7 @@
                             <input type="email" id="email" class="w-full bg-transparent border-b border-white/20 py-3 md:py-4 text-white placeholder-gray-700 focus:outline-none focus:border-white transition-colors text-sm md:text-base" placeholder="Email" required>
                         </div>
                         <div class="group">
-                            <select id="service" class="w-full bg-transparent border-b border-white/20 py-3 md:py-4 text-white focus:outline-none focus:border-white transition-colors text-sm md:text-base [&>option]:bg-black" required>
+                            <select id="service" class="w-full bg-transparent border-b border-white/20 py-3 md:py-4 text-white focus:outline-none focus:border-white transition-colors text-sm md:text-base" required>
                                 <option value="" class="text-gray-700">Выберите услугу</option>
                                 <option value="interior">Интерьерная визуализация</option>
                                 <option value="exterior">Экстерьерная визуализация</option>
@@ -1373,7 +1290,7 @@
                         <div class="group">
                             <textarea id="message" rows="4" class="w-full bg-transparent border-b border-white/20 py-3 md:py-4 text-white placeholder-gray-700 focus:outline-none focus:border-white transition-colors resize-none text-sm md:text-base" placeholder="О проекте" required></textarea>
                         </div>
-                        <button type="submit" class="btn-secondary w-full py-3 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase magnetic" data-hover>
+                        <button type="submit" class="btn-secondary w-full py-3 md:py-4 text-[10px] md:text-xs tracking-[0.2em] uppercase">
                             Отправить заявку
                         </button>
                     </form>
@@ -1391,74 +1308,61 @@
                     <p class="text-gray-600 text-[9px] md:text-[10px] mt-3 md:mt-4 tracking-widest">© <span id="currentYear"></span> Все права защищены</p>
                 </div>
                 <div class="flex gap-4 md:gap-8">
-                    <a href="#" class="text-gray-600 hover:text-white transition-colors magnetic" data-hover><i class="ri-behance-line text-lg md:text-xl"></i></a>
-                    <a href="#" class="text-gray-600 hover:text-white transition-colors magnetic" data-hover><i class="ri-artstation-line text-lg md:text-xl"></i></a>
-                    <a href="#" class="text-gray-600 hover:text-white transition-colors magnetic" data-hover><i class="ri-linkedin-box-line text-lg md:text-xl"></i></a>
+                    <a href="#" class="text-gray-600 hover:text-white transition-colors">
+                        <i class="ri-behance-line text-lg md:text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-white transition-colors">
+                        <i class="ri-artstation-line text-lg md:text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-white transition-colors">
+                        <i class="ri-linkedin-box-line text-lg md:text-xl"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Check if touch device - hide cursor
+        // ==================== CUSTOM CURSOR ====================
         const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-        if (isTouchDevice) {
-            document.getElementById('cursor').style.display = 'none';
-        }
-
-        // Custom Cursor (only for desktop)
         if (!isTouchDevice) {
             const cursor = document.getElementById('cursor');
-            
             document.addEventListener('mousemove', (e) => {
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
             });
-
-            document.querySelectorAll('[data-hover]').forEach(el => {
+            document.querySelectorAll('[data-hover], a, button').forEach(el => {
                 el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
                 el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
             });
         }
 
-        // Dropdown toggle function
-        function toggleDropdown(dropdownId) {
-            const dropdown = document.getElementById(dropdownId);
-            const allDropdowns = document.querySelectorAll('.material-dropdown');
-            
-            allDropdowns.forEach(d => {
-                if (d.id !== dropdownId) {
-                    d.classList.remove('active');
-                }
+        // ==================== DROPDOWN ====================
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            document.querySelectorAll('.material-dropdown').forEach(d => {
+                if (d.id !== id) d.classList.remove('active');
             });
-            
             dropdown.classList.toggle('active');
         }
 
-        // Close dropdowns when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.material-dropdown')) {
-                document.querySelectorAll('.material-dropdown').forEach(d => {
-                    d.classList.remove('active');
-                });
+                document.querySelectorAll('.material-dropdown').forEach(d => d.classList.remove('active'));
             }
         });
 
-        // Loader
+        // ==================== LOADER ====================
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('loader').classList.add('hidden');
-                setTimeout(() => {
-                    document.querySelectorAll('.text-reveal').forEach((el, index) => {
-                        setTimeout(() => {
-                            el.classList.add('active');
-                        }, index * 200);
-                    });
-                }, 500);
+                document.querySelectorAll('.text-reveal').forEach((el, i) => {
+                    setTimeout(() => el.classList.add('active'), i * 200);
+                });
             }, 2000);
         });
 
-        // Video Modal
+        // ==================== VIDEO MODAL ====================
         const watchVideoBtn = document.getElementById('watchVideoBtn');
         const videoModal = document.getElementById('videoModal');
         const videoModalClose = document.getElementById('videoModalClose');
@@ -1513,126 +1417,153 @@
 
         watchVideoBtn.addEventListener('click', openVideoModal);
         videoModalClose.addEventListener('click', closeVideoModal);
-
         videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                closeVideoModal();
-            }
+            if (e.target === videoModal) closeVideoModal();
         });
-
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && videoModal.classList.contains('active')) {
                 closeVideoModal();
             }
         });
 
-        // WebGL Three.js Setup - Modern Chair
+        // ==================== MOBILE MENU ====================
+        const mobileMenu = document.getElementById('mobileMenu');
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => mobileMenu.classList.add('active'));
+        document.getElementById('closeMobileMenu').addEventListener('click', () => mobileMenu.classList.remove('active'));
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.remove('active'));
+        });
+
+        // ==================== SCROLL ANIMATIONS ====================
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => scrollObserver.observe(el));
+
+        // ==================== NAVBAR SCROLL ====================
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-black/90', 'backdrop-blur-xl', 'border-white/10');
+                nav.classList.remove('bg-black/20', 'border-white/5');
+            } else {
+                nav.classList.remove('bg-black/90', 'backdrop-blur-xl', 'border-white/10');
+                nav.classList.add('bg-black/20', 'border-white/5');
+            }
+        });
+
+        // ==================== COPYRIGHT YEAR ====================
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // ==================== THREE.JS CONFIGURATOR ====================
         let webGLInitialized = false;
-        let camera, scene, renderer, chairGroup;
+        let scene, camera, renderer, controls, chairGroup;
         let woodMaterial, fabricMaterial, metalMaterial;
         let isAutoRotating = true;
-        let targetZoom = 35;
-        let isDragging = false;
-        let previousMousePosition = { x: 0, y: 0 };
-        let rotationSpeed = 0.005;
+        let targetZoom = 3.5;
 
-      // Функция загрузки твоей модели с GitHub
-const loadChairModel = (onModelLoaded) => {
-    if (!window.THREE || !THREE.GLTFLoader) {
-        console.error('❌ GLTFLoader not loaded!');
-        const loaderEl = document.getElementById('modelLoader');
-        if (loaderEl) {
-            loaderEl.innerHTML = '<p class="text-orange-500 text-sm px-4 text-center">Loading libraries...</p>';
-        }
-        return;
-    }
-    
-    const loader = new THREE.GLTFLoader();
-    const modelUrl = 'https://raw.githubusercontent.com/avades-studio/avades-studio/main/3d_model/chair_phisical_plugin.gltf';
-    
-    console.log('🔗 Loading model from:', modelUrl);
-    
-    loader.load(
-        modelUrl,
-        (gltf) => {
-            console.log('✅ Model loaded!', gltf);
-            const model = gltf.scene;
+        // Функция загрузки модели с GitHub
+        const loadChairModel = () => {
+            if (!window.THREE || !THREE.GLTFLoader) {
+                console.error('❌ GLTFLoader not loaded!');
+                const loaderEl = document.getElementById('modelLoader');
+                if (loaderEl) {
+                    loaderEl.innerHTML = '<p class="text-orange-500 text-sm px-4 text-center">Loading libraries...</p>';
+                }
+                return;
+            }
             
-            // Настройка модели
-            model.scale.set(0.01, 0.01, 0.01);
-            model.position.set(0, -2, 0);
-            model.rotation.y = Math.PI;
+            const loader = new THREE.GLTFLoader();
+            // 🔗 ПРАВИЛЬНАЯ ССЫЛКА НА RAW GITHUB
+            const modelUrl = 'https://raw.githubusercontent.com/avades-studio/avades-studio/main/3d_model/chair_phisical_plugin.gltf';
             
-            // Включаем тени и ищем материалы
-            model.traverse((child) => {
-                if (child.isMesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
+            console.log('🔗 Loading model from:', modelUrl);
+            
+            loader.load(
+                modelUrl,
+                (gltf) => {
+                    console.log('✅ Model loaded!', gltf);
+                    const model = gltf.scene;
                     
-                    const matName = child.material.name.toLowerCase();
+                    // Настройка модели
+                    model.scale.set(0.01, 0.01, 0.01);
+                    model.position.set(0, -2, 0);
+                    model.rotation.y = Math.PI;
                     
-                    // 🪵 ДЕРЕВО
-                    if (matName.includes('wood') || matName.includes('frame') || 
-                        matName.includes('дерево') || matName.includes('corona')) {
-                        woodMaterial = child.material;
-                        console.log('✓ Wood material:', child.material.name);
+                    // Включаем тени и ищем материалы
+                    model.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            
+                            const matName = child.material.name.toLowerCase();
+                            console.log('Material:', child.material.name);
+                            
+                            // 🪵 ДЕРЕВО
+                            if (matName.includes('wood') || matName.includes('frame') || 
+                                matName.includes('дерево') || matName.includes('corona')) {
+                                woodMaterial = child.material;
+                                console.log('✓ Wood material:', child.material.name);
+                            }
+                            // 🧵 ТКАНЬ
+                            else if (matName.includes('fabric') || matName.includes('seat') || 
+                                     matName.includes('ткань') || matName.includes('upholstery')) {
+                                fabricMaterial = child.material;
+                                console.log('✓ Fabric material:', child.material.name);
+                            }
+                            // ⚙️ МЕТАЛЛ
+                            else if (matName.includes('metal') || matName.includes('leg') || 
+                                     matName.includes('ножка')) {
+                                metalMaterial = child.material;
+                            }
+                        }
+                    });
+                    
+                    // Запасной вариант
+                    if (!woodMaterial || !fabricMaterial) {
+                        let count = 0;
+                        model.traverse((child) => {
+                            if (child.isMesh && count < 2) {
+                                if (!woodMaterial) woodMaterial = child.material;
+                                else if (!fabricMaterial) fabricMaterial = child.material;
+                                count++;
+                            }
+                        });
                     }
-                    // 🧵 ТКАНЬ
-                    else if (matName.includes('fabric') || matName.includes('seat') || 
-                             matName.includes('ткань') || matName.includes('upholstery')) {
-                        fabricMaterial = child.material;
-                        console.log('✓ Fabric material:', child.material.name);
+                    
+                    scene.add(model);
+                    chairGroup = model;
+                    
+                    // Скрываем loader
+                    const loaderEl = document.getElementById('modelLoader');
+                    if (loaderEl) {
+                        loaderEl.style.display = 'none';
                     }
-                    // ⚙️ МЕТАЛЛ
-                    else if (matName.includes('metal') || matName.includes('leg') || 
-                             matName.includes('ножка')) {
-                        metalMaterial = child.material;
+                    
+                    console.log('🪑 Chair model ready');
+                },
+                (progress) => {
+                    const percent = (progress.loaded / progress.total * 100).toFixed(0);
+                    console.log(`📥 Loading: ${percent}%`);
+                },
+                (error) => {
+                    console.error('❌ Error loading model:', error);
+                    const loaderEl = document.getElementById('modelLoader');
+                    if (loaderEl) {
+                        loaderEl.innerHTML = `
+                            <div class="text-red-400 text-sm px-6 text-center">
+                                <p class="mb-2">Ошибка загрузки модели</p>
+                                <p class="text-xs text-gray-400">Проверьте консоль (F12)</p>
+                            </div>
+                        `;
                     }
                 }
-            });
-            
-            // Запасной вариант
-            if (!woodMaterial || !fabricMaterial) {
-                let count = 0;
-                model.traverse((child) => {
-                    if (child.isMesh && count < 2) {
-                        if (!woodMaterial) woodMaterial = child.material;
-                        else if (!fabricMaterial) fabricMaterial = child.material;
-                        count++;
-                    }
-                });
-            }
-            
-            scene.add(model);
-            chairGroup = model;
-            
-            // Скрываем loader
-            const loaderEl = document.getElementById('modelLoader');
-            if (loaderEl) {
-                loaderEl.style.display = 'none';
-            }
-            
-            console.log('🪑 Chair model ready');
-            if (onModelLoaded) onModelLoaded(model);
-        },
-        (progress) => {
-            const percent = (progress.loaded / progress.total * 100).toFixed(0);
-            console.log(`📥 Loading: ${percent}%`);
-        },
-        (error) => {
-            console.error('❌ Error loading model:', error);
-            const loaderEl = document.getElementById('modelLoader');
-            if (loaderEl) {
-                loaderEl.innerHTML = `
-                    <div class="text-red-400 text-sm px-6 text-center">
-                        <p class="mb-2">Ошибка загрузки модели</p>
-                        <p class="text-xs text-gray-400">Проверьте консоль (F12)</p>
-                    </div>
-                `;
-            }
-        }
-    );
-};
+            );
+        };
+
         const initWebGL = () => {
             if (webGLInitialized) return;
 
@@ -1642,121 +1573,70 @@ const loadChairModel = (onModelLoaded) => {
             if (!canvas || !container) return;
 
             scene = new THREE.Scene();
-            scene.fog = new THREE.Fog(0x0a0a0a, 50, 150);
+            scene.fog = new THREE.Fog(0x0a0a0a, 10, 50);
             
             camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
-// Добавь OrbitControls
-const controls = new THREE.OrbitControls(camera, canvas);
-controls.enableDamping = true;
-controls.dampingFactor = 0.05;
-controls.autoRotate = isAutoRotating;
-controls.autoRotateSpeed = 1;
-controls.enablePan = false;
-controls.minDistance = 20;
-controls.maxDistance = 60;
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            camera.position.set(3, 2, 3);
             
+            renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-         // Загружаем модель вместо создания процедурной
-loadChairModel((model) => {
-    // Модель загружена - можно добавить доп. настройки если нужно
-    console.log('🪑 Chair model ready');
-});
-
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            
+            // OrbitControls
+            controls = new THREE.OrbitControls(camera, canvas);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.autoRotate = isAutoRotating;
+            controls.autoRotateSpeed = 1;
+            controls.enablePan = false;
+            controls.minDistance = 2;
+            controls.maxDistance = 6;
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
-
+            
             const mainLight = new THREE.DirectionalLight(0xffffff, 1.5);
-            mainLight.position.set(30, 40, 30);
+            mainLight.position.set(5, 5, 5);
             mainLight.castShadow = true;
-            mainLight.shadow.mapSize.width = 2048;
-            mainLight.shadow.mapSize.height = 2048;
             scene.add(mainLight);
-
-            const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
-            fillLight.position.set(-30, 20, -30);
+            
+            const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            fillLight.position.set(-5, 3, -5);
             scene.add(fillLight);
-
-            const rimLight = new THREE.DirectionalLight(0xf59e0b, 0.4);
-            rimLight.position.set(0, 10, -50);
+            
+            const rimLight = new THREE.DirectionalLight(0xf59e0b, 0.3);
+            rimLight.position.set(0, 2, -5);
             scene.add(rimLight);
-
-            const pointLight = new THREE.PointLight(0xffffff, 1.0);
-            pointLight.position.set(0, 50, 0);
-            scene.add(pointLight);
-
-            const groundGeometry = new THREE.PlaneGeometry(100, 100);
-            const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.4 });
+            
+            // Ground
+            const groundGeometry = new THREE.PlaneGeometry(20, 20);
+            const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.3 });
             const ground = new THREE.Mesh(groundGeometry, groundMaterial);
             ground.rotation.x = -Math.PI / 2;
-            ground.position.y = 0;
+            ground.position.y = -1;
             ground.receiveShadow = true;
             scene.add(ground);
-
-            camera.position.z = targetZoom;
-            camera.position.y = 12;
-            camera.lookAt(0, 10, 0);
-
-            const onStartDrag = (e) => {
-                isDragging = true;
-                isAutoRotating = false;
-                
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                previousMousePosition = { x: clientX, y: clientY };
-            };
-
-            const onMoveDrag = (e) => {
-                if (!isDragging) return;
-                e.preventDefault();
-                
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                const deltaMove = {
-                    x: clientX - previousMousePosition.x,
-                    y: clientY - previousMousePosition.y
-                };
-                
-                chairGroup.rotation.y += deltaMove.x * rotationSpeed;
-                chairGroup.rotation.x += deltaMove.y * rotationSpeed * 0.5;
-                
-                previousMousePosition = { x: clientX, y: clientY };
-            };
-
-            const onEndDrag = () => {
-                isDragging = false;
-            };
-
-            canvas.addEventListener('mousedown', onStartDrag);
-            canvas.addEventListener('mousemove', onMoveDrag);
-            canvas.addEventListener('mouseup', onEndDrag);
-            canvas.addEventListener('mouseleave', onEndDrag);
             
-            canvas.addEventListener('touchstart', onStartDrag, { passive: false });
-            canvas.addEventListener('touchmove', onMoveDrag, { passive: false });
-            canvas.addEventListener('touchend', onEndDrag);
-            canvas.addEventListener('touchcancel', onEndDrag);
-
+            // Загружаем модель
+            loadChairModel();
+            
+            // Animation
             const animate = () => {
                 requestAnimationFrame(animate);
-    controls.update(); // Добавь эту строку
+                controls.update();
                 
-                if (isAutoRotating && !isDragging) {
+                if (isAutoRotating && chairGroup) {
                     chairGroup.rotation.y += 0.002;
                 }
-                
-                camera.position.z += (targetZoom - camera.position.z) * 0.1;
                 
                 renderer.render(scene, camera);
             };
             animate();
-
+            
+            // Resize
             window.addEventListener('resize', () => {
                 const width = container.clientWidth;
                 const height = container.clientHeight;
@@ -1764,70 +1644,38 @@ loadChairModel((model) => {
                 camera.aspect = width / height;
                 camera.updateProjectionMatrix();
             });
-
+            
             webGLInitialized = true;
         };
 
-        document.getElementById('rotateBtn')?.addEventListener('click', () => {
+        // ==================== CONTROLS ====================
+        document.getElementById('rotateBtn')?.addEventListener('click', function() {
             isAutoRotating = !isAutoRotating;
+            if (controls) controls.autoRotate = isAutoRotating;
+            this.classList.toggle('active');
         });
 
         document.getElementById('zoomInBtn')?.addEventListener('click', () => {
-            targetZoom = Math.max(20, targetZoom - 5);
+            targetZoom = Math.max(2, targetZoom - 0.5);
+            camera.position.setLength(targetZoom);
         });
 
         document.getElementById('zoomOutBtn')?.addEventListener('click', () => {
-            targetZoom = Math.min(60, targetZoom + 5);
+            targetZoom = Math.min(6, targetZoom + 0.5);
+            camera.position.setLength(targetZoom);
         });
 
         document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
             const container = document.getElementById('webglContainer');
-            if (container) {
-                if (container.requestFullscreen) {
-                    container.requestFullscreen().then(() => {
-                        setTimeout(() => {
-                            const canvas = document.getElementById('webgl-canvas');
-                            const width = container.clientWidth;
-                            const height = container.clientHeight;
-                            renderer.setSize(width, height);
-                            camera.aspect = width / height;
-                            camera.updateProjectionMatrix();
-                        }, 100);
-                    }).catch(err => {
-                        console.log('Fullscreen error:', err);
-                    });
-                } else if (container.webkitRequestFullscreen) {
-                    container.webkitRequestFullscreen();
-                } else if (container.msRequestFullscreen) {
-                    container.msRequestFullscreen();
-                } else if (container.mozRequestFullScreen) {
-                    container.mozRequestFullScreen();
-                }
-            }
+            if (container.requestFullscreen) container.requestFullscreen();
+            else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
         });
 
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                const container = document.getElementById('webglContainer');
-                if (container && renderer) {
-                    setTimeout(() => {
-                        const canvas = document.getElementById('webgl-canvas');
-                        const width = container.clientWidth;
-                        const height = container.clientHeight;
-                        renderer.setSize(width, height);
-                        camera.aspect = width / height;
-                        camera.updateProjectionMatrix();
-                    }, 100);
-                }
-            }
-        });
-
+        // ==================== MATERIAL SELECTOR ====================
         const setupMaterialSelector = () => {
-            const materialOptions = document.querySelectorAll('.material-option');
-            
-            materialOptions.forEach(option => {
+            document.querySelectorAll('.material-option').forEach(option => {
                 option.addEventListener('click', () => {
-                    const parent = option.parentElement;
+                    const parent = option.parentElement.parentElement;
                     parent.querySelectorAll('.material-option').forEach(o => o.classList.remove('active'));
                     option.classList.add('active');
                     
@@ -1840,117 +1688,30 @@ loadChairModel((model) => {
                         fabricMaterial.color.set(color);
                     }
                     
-                    option.closest('.material-dropdown').classList.remove('active');
+                    parent.classList.remove('active');
                 });
             });
         };
 
-        const ue5Section = document.getElementById('ue5');
-        const ue5Observer = new IntersectionObserver((entries) => {
+        // Initialize WebGL when section is visible
+        const configObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting && !webGLInitialized) {
                     setTimeout(() => {
                         initWebGL();
                         setupMaterialSelector();
                     }, 500);
-                    ue5Observer.unobserve(entry.target);
+                    configObserver.unobserve(entry.target);
                 }
             });
         }, { threshold: 0.3 });
-        
-        ue5Observer.observe(ue5Section);
 
-        // Mobile Menu
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const closeMobileMenu = document.getElementById('closeMobileMenu');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+        configObserver.observe(document.getElementById('ue5'));
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.add('active');
-        });
-
-        closeMobileMenu.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-        });
-
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-            });
-        });
-
-        // Scroll animations
-        const scrollObserverOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
-
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, scrollObserverOptions);
-
-        document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
-            scrollObserver.observe(el);
-        });
-
-        // Magnetic button effect
-        if (!isTouchDevice) {
-            document.querySelectorAll('.magnetic').forEach(el => {
-                el.addEventListener('mousemove', (e) => {
-                    const rect = el.getBoundingClientRect();
-                    const x = e.clientX - rect.left - rect.width / 2;
-                    const y = e.clientY - rect.top - rect.height / 2;
-                    el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-                });
-                el.addEventListener('mouseleave', () => {
-                    el.style.transform = 'translate(0, 0)';
-                });
-            });
-        }
-
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // Navbar blur on scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('bg-black/90', 'backdrop-blur-xl', 'border-white/10');
-                nav.classList.remove('bg-black/20', 'border-white/5');
-            } else {
-                nav.classList.remove('bg-black/90', 'backdrop-blur-xl', 'border-white/10');
-                nav.classList.add('bg-black/20', 'border-white/5');
-            }
-        });
-
-        // Dynamic Copyright Year - Fixed
-        document.addEventListener('DOMContentLoaded', function() {
-            const yearEl = document.getElementById('currentYear');
-            if (yearEl) {
-                yearEl.textContent = new Date().getFullYear();
-            }
-        });
-
-        // 🔧 TELEGRAM FORM HANDLER
+        // ==================== TELEGRAM FORM ====================
         const TELEGRAM_BOT_TOKEN = '8734618824:AAF8jobOs4pAXDDvgr2efaCIawm4R3yLkFg';
-  const GROUP_ID = '-1003707952142'; // Замени на ID своей группы
-    const TOPIC_ID = 942; // Замени на ID темы "Заявки с сайта"
+        const GROUP_ID = '-1003707952142';
+        const TOPIC_ID = 942;
         
         document.querySelector('form').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -1985,9 +1746,7 @@ loadChairModel((model) => {
                     `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
                     {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             chat_id: GROUP_ID,
                             message_thread_id: TOPIC_ID,
@@ -2019,9 +1778,10 @@ loadChairModel((model) => {
                     submitBtn.style.background = '';
                     submitBtn.disabled = false;
                 }, 3000);
-                console.error('Error sending to Telegram:', error);
+                console.error('Error:', error);
             }
         });
     </script>
 </body>
 </html>
+

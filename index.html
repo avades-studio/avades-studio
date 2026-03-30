@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AVADES.STUDIO | 3D Modeling & Visualization</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Three.js for WebGL Demo -->
+    <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- GLTF Loader для загрузки 3D моделей -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* Fix mobile overflow */
         html, body {
             overflow-x: hidden;
             max-width: 100vw;
@@ -60,24 +58,10 @@
             }
         }
 
-        iframe ~ .custom-cursor,
-        .iframe-active .custom-cursor,
-        #webgl-canvas ~ .custom-cursor {
-            display: none;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             background-color: #050505;
-        }
-
-        body.iframe-active {
-            cursor: auto;
-        }
-
-        body.iframe-active * {
-            cursor: auto !important;
         }
 
         .studio-name {
@@ -364,11 +348,6 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
             z-index: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .video-overlay.light {
-            opacity: 0.4;
         }
 
         .video-modal {
@@ -397,7 +376,6 @@
             max-width: 1200px;
             aspect-ratio: 16/9;
             border: none;
-            pointer-events: auto;
         }
 
         .video-modal-close {
@@ -421,7 +399,6 @@
 
         .video-modal-close:hover {
             transform: scale(1.1);
-            background: rgba(255,255,255,0.1);
         }
 
         .webgl-container {
@@ -444,7 +421,6 @@
             width: 100%;
             height: 100%;
             display: block;
-            outline: none;
         }
 
         .webgl-controls {
@@ -659,13 +635,6 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
-        @media (min-width: 768px) {
-            .streaming-dot {
-                width: 8px;
-                height: 8px;
-            }
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.4; }
@@ -706,9 +675,6 @@
                 font-size: 2.5rem !important;
                 line-height: 1.1 !important;
             }
-            .video-bg {
-                object-position: center;
-            }
             .webgl-container {
                 height: 350px;
             }
@@ -723,7 +689,6 @@
             filter: grayscale(0%);
         }
 
-        /* Loading Overlay for 3D Model */
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -762,13 +727,13 @@
 
     <!-- Loader -->
     <div class="loader" id="loader">
-        <img src="Logo_white.png" alt="AVADES Logo" class="loader-logo">
+        <img src="Logo_white.png" alt="AVADES Logo" class="loader-logo" onerror="this.style.display='none'">
         <div class="loader-text">AVADES.STUDIO</div>
     </div>
 
     <!-- Video Modal -->
     <div class="video-modal" id="videoModal">
-        <span class="video-modal-close" id="videoModalClose" data-hover>&times;</span>
+        <span class="video-modal-close" id="videoModalClose">&times;</span>
         <div id="videoContainer" style="width: 90%; max-width: 1200px; aspect-ratio: 16/9;"></div>
     </div>
 
@@ -798,7 +763,7 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu Overlay -->
+    <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <button id="closeMobileMenu" class="absolute top-6 right-6 text-white">
             <i class="ri-close-line text-4xl"></i>
@@ -816,7 +781,7 @@
             <source src="https://videos.pexels.com/video-files/3209963/3209963-uhd_2560_1440_25fps.mp4" type="video/mp4">
         </video>
         
-        <div class="video-overlay" id="videoOverlay"></div>
+        <div class="video-overlay"></div>
         
         <div class="relative z-10 text-center px-4 max-w-6xl mx-auto">
             <p class="text-gray-400 text-[9px] md:text-[10px] tracking-[0.5em] md:tracking-[0.8em] uppercase mb-6 md:mb-12 reveal">3D MODELING & VISUALIZATION</p>
@@ -897,7 +862,7 @@
         </div>
     </section>
 
-    <!-- Unreal Engine Section -->
+    <!-- UE5 Section with Configurator -->
     <section id="ue5" class="py-16 md:py-32 bg-neutral-950 relative overflow-hidden">
         <div class="absolute top-0 right-0 w-[400px] h-[400px] md:w-[800px] md:h-[800px] bg-white/5 rounded-full blur-[150px]"></div>
         <div class="absolute bottom-0 left-0 w-[400px] h-[400px] md:w-[800px] md:h-[800px] bg-white/5 rounded-full blur-[150px]"></div>
@@ -1000,12 +965,10 @@
 
                             <canvas id="webgl-canvas"></canvas>
                             
-                            <!-- Loading Overlay -->
                             <div class="loading-overlay" id="modelLoader" style="display: flex;">
                                 <div class="loading-spinner"></div>
                             </div>
                             
-                            <!-- Material Selector -->
                             <div class="material-selector">
                                 <div class="material-dropdown" id="woodDropdown">
                                     <div class="material-dropdown-header" onclick="toggleDropdown('woodDropdown')">
@@ -1399,7 +1362,7 @@
 
         function openVideoModal() {
             videoModal.classList.add('active');
-            videoOverlay.classList.add('light');
+            if (videoOverlay) videoOverlay.classList.add('light');
             document.body.classList.add('iframe-active');
             if (playerInstance && typeof playerInstance.playVideo === 'function') {
                 playerInstance.playVideo();
@@ -1408,30 +1371,45 @@
 
         function closeVideoModal() {
             videoModal.classList.remove('active');
-            videoOverlay.classList.remove('light');
+            if (videoOverlay) videoOverlay.classList.remove('light');
             document.body.classList.remove('iframe-active');
             if (playerInstance && typeof playerInstance.pauseVideo === 'function') {
                 playerInstance.pauseVideo();
             }
         }
 
-        watchVideoBtn.addEventListener('click', openVideoModal);
-        videoModalClose.addEventListener('click', closeVideoModal);
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) closeVideoModal();
-        });
+        if (watchVideoBtn) watchVideoBtn.addEventListener('click', openVideoModal);
+        if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
+        if (videoModal) {
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) closeVideoModal();
+            });
+        }
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && videoModal.classList.contains('active')) {
+            if (e.key === 'Escape' && videoModal && videoModal.classList.contains('active')) {
                 closeVideoModal();
             }
         });
 
         // ==================== MOBILE MENU ====================
         const mobileMenu = document.getElementById('mobileMenu');
-        document.getElementById('mobileMenuBtn').addEventListener('click', () => mobileMenu.classList.add('active'));
-        document.getElementById('closeMobileMenu').addEventListener('click', () => mobileMenu.classList.remove('active'));
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                if (mobileMenu) mobileMenu.classList.add('active');
+            });
+        }
+        if (closeMobileMenu) {
+            closeMobileMenu.addEventListener('click', () => {
+                if (mobileMenu) mobileMenu.classList.remove('active');
+            });
+        }
         document.querySelectorAll('.mobile-link').forEach(link => {
-            link.addEventListener('click', () => mobileMenu.classList.remove('active'));
+            link.addEventListener('click', () => {
+                if (mobileMenu) mobileMenu.classList.remove('active');
+            });
         });
 
         // ==================== SCROLL ANIMATIONS ====================
@@ -1446,83 +1424,81 @@
         // ==================== NAVBAR SCROLL ====================
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                nav.classList.add('bg-black/90', 'backdrop-blur-xl', 'border-white/10');
-                nav.classList.remove('bg-black/20', 'border-white/5');
-            } else {
-                nav.classList.remove('bg-black/90', 'backdrop-blur-xl', 'border-white/10');
-                nav.classList.add('bg-black/20', 'border-white/5');
+            if (nav) {
+                if (window.scrollY > 50) {
+                    nav.classList.add('bg-black/90', 'backdrop-blur-xl', 'border-white/10');
+                    nav.classList.remove('bg-black/20', 'border-white/5');
+                } else {
+                    nav.classList.remove('bg-black/90', 'backdrop-blur-xl', 'border-white/10');
+                    nav.classList.add('bg-black/20', 'border-white/5');
+                }
             }
         });
 
         // ==================== COPYRIGHT YEAR ====================
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        const yearEl = document.getElementById('currentYear');
+        if (yearEl) {
+            yearEl.textContent = new Date().getFullYear();
+        }
 
         // ==================== THREE.JS CONFIGURATOR ====================
         let webGLInitialized = false;
         let scene, camera, renderer, controls, chairGroup;
-        let woodMaterial, fabricMaterial, metalMaterial;
+        let woodMaterial, fabricMaterial;
         let isAutoRotating = true;
         let targetZoom = 3.5;
 
-        // Функция загрузки модели с GitHub
         const loadChairModel = () => {
-            if (!window.THREE || !THREE.GLTFLoader) {
+            console.log('🔍 Starting model load...');
+            
+            if (!window.THREE) {
+                console.error('❌ THREE.js not loaded!');
+                return;
+            }
+            
+            if (!THREE.GLTFLoader) {
                 console.error('❌ GLTFLoader not loaded!');
                 const loaderEl = document.getElementById('modelLoader');
                 if (loaderEl) {
-                    loaderEl.innerHTML = '<p class="text-orange-500 text-sm px-4 text-center">Loading libraries...</p>';
+                    loaderEl.innerHTML = '<p class="text-orange-500 text-sm px-4 text-center">Загрузка библиотек...</p>';
                 }
                 return;
             }
             
             const loader = new THREE.GLTFLoader();
-            // 🔗 ПРАВИЛЬНАЯ ССЫЛКА НА RAW GITHUB
-            const modelUrl = 'https://raw.githubusercontent.com/avades-studio/avades-studio/main/3d_model/chair_phisical_plugin.gltf';
+            const modelUrl = 'https://raw.githubusercontent.com/avades-studio/avades-studio/main/3d_model/chair_corona.glb';
             
-            console.log('🔗 Loading model from:', modelUrl);
+            console.log('🔗 Loading from:', modelUrl);
             
             loader.load(
                 modelUrl,
                 (gltf) => {
-                    console.log('✅ Model loaded!', gltf);
+                    console.log('✅ Model loaded!');
                     const model = gltf.scene;
                     
-                    // Настройка модели
                     model.scale.set(0.01, 0.01, 0.01);
                     model.position.set(0, -2, 0);
                     model.rotation.y = Math.PI;
                     
-                    // Включаем тени и ищем материалы
                     model.traverse((child) => {
                         if (child.isMesh) {
                             child.castShadow = true;
                             child.receiveShadow = true;
                             
                             const matName = child.material.name.toLowerCase();
-                            console.log('Material:', child.material.name);
+                            console.log('🎨 Material:', child.material.name);
                             
-                            // 🪵 ДЕРЕВО
-                            if (matName.includes('wood') || matName.includes('frame') || 
-                                matName.includes('дерево') || matName.includes('corona')) {
+                            if (matName.includes('wood') || matName.includes('frame') || matName.includes('corona')) {
                                 woodMaterial = child.material;
-                                console.log('✓ Wood material:', child.material.name);
+                                console.log('✓ Wood:', child.material.name);
                             }
-                            // 🧵 ТКАНЬ
-                            else if (matName.includes('fabric') || matName.includes('seat') || 
-                                     matName.includes('ткань') || matName.includes('upholstery')) {
+                            else if (matName.includes('fabric') || matName.includes('seat')) {
                                 fabricMaterial = child.material;
-                                console.log('✓ Fabric material:', child.material.name);
-                            }
-                            // ⚙️ МЕТАЛЛ
-                            else if (matName.includes('metal') || matName.includes('leg') || 
-                                     matName.includes('ножка')) {
-                                metalMaterial = child.material;
+                                console.log('✓ Fabric:', child.material.name);
                             }
                         }
                     });
                     
-                    // Запасной вариант
                     if (!woodMaterial || !fabricMaterial) {
                         let count = 0;
                         model.traverse((child) => {
@@ -1537,28 +1513,20 @@
                     scene.add(model);
                     chairGroup = model;
                     
-                    // Скрываем loader
                     const loaderEl = document.getElementById('modelLoader');
-                    if (loaderEl) {
-                        loaderEl.style.display = 'none';
-                    }
+                    if (loaderEl) loaderEl.style.display = 'none';
                     
-                    console.log('🪑 Chair model ready');
+                    console.log('🪑 Chair ready');
                 },
                 (progress) => {
                     const percent = (progress.loaded / progress.total * 100).toFixed(0);
-                    console.log(`📥 Loading: ${percent}%`);
+                    console.log(`📥 ${percent}%`);
                 },
                 (error) => {
-                    console.error('❌ Error loading model:', error);
+                    console.error('❌ Error:', error);
                     const loaderEl = document.getElementById('modelLoader');
                     if (loaderEl) {
-                        loaderEl.innerHTML = `
-                            <div class="text-red-400 text-sm px-6 text-center">
-                                <p class="mb-2">Ошибка загрузки модели</p>
-                                <p class="text-xs text-gray-400">Проверьте консоль (F12)</p>
-                            </div>
-                        `;
+                        loaderEl.innerHTML = '<p class="text-gray-400 text-sm px-4 text-center">Модель не загрузилась<br><span class="text-xs">Проверьте консоль</span></p>';
                     }
                 }
             );
@@ -1582,9 +1550,7 @@
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             
-            // OrbitControls
             controls = new THREE.OrbitControls(camera, canvas);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
@@ -1594,7 +1560,6 @@
             controls.minDistance = 2;
             controls.maxDistance = 6;
             
-            // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
             
@@ -1603,15 +1568,6 @@
             mainLight.castShadow = true;
             scene.add(mainLight);
             
-            const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
-            fillLight.position.set(-5, 3, -5);
-            scene.add(fillLight);
-            
-            const rimLight = new THREE.DirectionalLight(0xf59e0b, 0.3);
-            rimLight.position.set(0, 2, -5);
-            scene.add(rimLight);
-            
-            // Ground
             const groundGeometry = new THREE.PlaneGeometry(20, 20);
             const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.3 });
             const ground = new THREE.Mesh(groundGeometry, groundMaterial);
@@ -1620,10 +1576,8 @@
             ground.receiveShadow = true;
             scene.add(ground);
             
-            // Загружаем модель
             loadChairModel();
             
-            // Animation
             const animate = () => {
                 requestAnimationFrame(animate);
                 controls.update();
@@ -1636,7 +1590,6 @@
             };
             animate();
             
-            // Resize
             window.addEventListener('resize', () => {
                 const width = container.clientWidth;
                 const height = container.clientHeight;
@@ -1649,27 +1602,42 @@
         };
 
         // ==================== CONTROLS ====================
-        document.getElementById('rotateBtn')?.addEventListener('click', function() {
-            isAutoRotating = !isAutoRotating;
-            if (controls) controls.autoRotate = isAutoRotating;
-            this.classList.toggle('active');
-        });
+        const rotateBtn = document.getElementById('rotateBtn');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-        document.getElementById('zoomInBtn')?.addEventListener('click', () => {
-            targetZoom = Math.max(2, targetZoom - 0.5);
-            camera.position.setLength(targetZoom);
-        });
+        if (rotateBtn) {
+            rotateBtn.addEventListener('click', function() {
+                isAutoRotating = !isAutoRotating;
+                if (controls) controls.autoRotate = isAutoRotating;
+                this.classList.toggle('active');
+            });
+        }
 
-        document.getElementById('zoomOutBtn')?.addEventListener('click', () => {
-            targetZoom = Math.min(6, targetZoom + 0.5);
-            camera.position.setLength(targetZoom);
-        });
+        if (zoomInBtn) {
+            zoomInBtn.addEventListener('click', () => {
+                targetZoom = Math.max(2, targetZoom - 0.5);
+                if (camera) camera.position.setLength(targetZoom);
+            });
+        }
 
-        document.getElementById('fullscreenBtn')?.addEventListener('click', () => {
-            const container = document.getElementById('webglContainer');
-            if (container.requestFullscreen) container.requestFullscreen();
-            else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
-        });
+        if (zoomOutBtn) {
+            zoomOutBtn.addEventListener('click', () => {
+                targetZoom = Math.min(6, targetZoom + 0.5);
+                if (camera) camera.position.setLength(targetZoom);
+            });
+        }
+
+        if (fullscreenBtn) {
+            fullscreenBtn.addEventListener('click', () => {
+                const container = document.getElementById('webglContainer');
+                if (container) {
+                    if (container.requestFullscreen) container.requestFullscreen();
+                    else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+                }
+            });
+        }
 
         // ==================== MATERIAL SELECTOR ====================
         const setupMaterialSelector = () => {

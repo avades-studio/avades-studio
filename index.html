@@ -7,6 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Three.js for WebGL Demo -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- GLTF Loader для загрузки 3D моделей -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -1057,18 +1060,17 @@
                     </div>
                     
                     <div class="reveal-right">
-                        <div class="webgl-container group" id="webglContainer">
-                            <div class="streaming-badge">
-                                <div class="streaming-dot"></div>
-                                <span>WebGL Configurator</span>
-                            </div>
+                      <div class="webgl-container group" id="webglContainer">
+    <div class="streaming-badge">
+        <div class="streaming-dot"></div>
+        <span>WebGL Configurator</span>
+    </div>
 
-                            <canvas id="webgl-canvas"></canvas>
-    <!-- 🔥 LOADING OVERLAY (добавь это) -->
+    <canvas id="webgl-canvas"></canvas>
+    
     <div class="loading-overlay" id="modelLoader" style="display: flex;">
         <div class="loading-spinner"></div>
     </div>
-    <!-- 🔥 КОНЕЦ LOADING OVERLAY -->
                             <!-- Material Selector Dropdowns -->
                             <div class="material-selector">
                                 <!-- Wood Dropdown -->

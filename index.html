@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AVADES.STUDIO | 3D Modeling & Visualization</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Three.js for WebGL Demo -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<!-- GLTF Loader для загрузки 3D моделей -->
+   <!-- Three.js for WebGL Demo -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- ДОБАВЬ ВОТ ЭТИ ДВА СКРИПТА: -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -789,24 +789,24 @@
         .about-image:hover {
             filter: grayscale(0%);
         }
-	/* Добавь это в конец <style> */
-	.loading-overlay {
-   	 position: absolute;
-  	  top: 0;
-  	  left: 0;
-  	  width: 100%;
-   	 height: 100%;
-   	 display: flex;
-   	 align-items: center;
-   	 justify-content: center;
-   	 background: rgba(0,0,0,0.8);
-   	 z-index: 10;
-	}
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.9);
+    z-index: 50;
+    border-radius: 12px;
+}
 
 .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(255,255,255,0.1);
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255,255,255,0.1);
     border-top-color: #f59e0b;
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -1061,9 +1061,9 @@
                     
                     <div class="reveal-right">
                       <div class="webgl-container group" id="webglContainer">
-    <div class="streaming-badge">
-        <div class="streaming-dot"></div>
-        <span>WebGL Configurator</span>
+   			 <div class="streaming-badge">
+        			<div class="streaming-dot"></div>
+       			 <span>WebGL Configurator</span>
     </div>
 
     <canvas id="webgl-canvas"></canvas>
@@ -1538,48 +1538,60 @@
 
       // Функция загрузки твоей модели с GitHub
 const loadChairModel = (onModelLoaded) => {
-    const loader = new THREE.GLTFLoader();
+    if (!window.THREE || !THREE.GLTFLoader) {
+        console.error('❌ GLTFLoader not loaded!');
+        const loaderEl = document.getElementById('modelLoader');
+        if (loaderEl) {
+            loaderEl.innerHTML = '<p class="text-orange-500 text-sm px-4 text-center">Loading libraries...</p>';
+        }
+        return;
+    }
     
-    // 🔗 ССЫЛКА НА ТВОЮ МОДЕЛЬ (raw.githubusercontent)
+    const loader = new THREE.GLTFLoader();
     const modelUrl = 'https://raw.githubusercontent.com/avades-studio/avades-studio/main/3d_model/chair_corona.gltf';
+    
+    console.log('🔗 Loading model from:', modelUrl);
     
     loader.load(
         modelUrl,
         (gltf) => {
+            console.log('✅ Model loaded!', gltf);
             const model = gltf.scene;
             
             // Настройка модели
-            model.scale.set(0.01, 0.01, 0.01); // Масштаб (подбери под свою модель)
-            model.position.set(0, -2, 0);       // Позиция
-            model.rotation.y = Math.PI;          // Поворот
+            model.scale.set(0.01, 0.01, 0.01);
+            model.position.set(0, -2, 0);
+            model.rotation.y = Math.PI;
             
-            // Включаем тени
+            // Включаем тени и ищем материалы
             model.traverse((child) => {
                 if (child.isMesh) {
                     child.castShadow = true;
                     child.receiveShadow = true;
                     
-                    // 🔍 Ищем материалы по имени для смены цвета
                     const matName = child.material.name.toLowerCase();
                     
-                    // 🪵 ДЕРЕВО - меняй условия под имена материалов в твоей модели
-                    if (matName.includes('wood') || matName.includes('frame') || matName.includes('дерево') || matName.includes('coronamaterial_wood')) {
+                    // 🪵 ДЕРЕВО
+                    if (matName.includes('wood') || matName.includes('frame') || 
+                        matName.includes('дерево') || matName.includes('corona')) {
                         woodMaterial = child.material;
-                        console.log('✓ Wood material found:', child.material.name);
+                        console.log('✓ Wood material:', child.material.name);
                     }
                     // 🧵 ТКАНЬ
-                    else if (matName.includes('fabric') || matName.includes('seat') || matName.includes('ткань') || matName.includes('coronamaterial_fabric')) {
+                    else if (matName.includes('fabric') || matName.includes('seat') || 
+                             matName.includes('ткань') || matName.includes('upholstery')) {
                         fabricMaterial = child.material;
-                        console.log('✓ Fabric material found:', child.material.name);
+                        console.log('✓ Fabric material:', child.material.name);
                     }
-                    // ⚙️ МЕТАЛЛ (ножки, фурнитура)
-                    else if (matName.includes('metal') || matName.includes('leg') || matName.includes('ножка')) {
+                    // ⚙️ МЕТАЛЛ
+                    else if (matName.includes('metal') || matName.includes('leg') || 
+                             matName.includes('ножка')) {
                         metalMaterial = child.material;
                     }
                 }
             });
             
-            // Если материалы не нашли по имени - берём первые два как запасной вариант
+            // Запасной вариант
             if (!woodMaterial || !fabricMaterial) {
                 let count = 0;
                 model.traverse((child) => {
@@ -1591,21 +1603,19 @@ const loadChairModel = (onModelLoaded) => {
                 });
             }
             
-            // Добавляем модель в сцену
             scene.add(model);
-            chairGroup = model; // Сохраняем ссылку для вращения
+            chairGroup = model;
             
-            // Скрываем лоадер
+            // Скрываем loader
             const loaderEl = document.getElementById('modelLoader');
-            if (loaderEl) loaderEl.style.display = 'none';
+            if (loaderEl) {
+                loaderEl.style.display = 'none';
+            }
             
-            // Вызываем коллбек если нужен
+            console.log('🪑 Chair model ready');
             if (onModelLoaded) onModelLoaded(model);
-            
-            console.log('✅ Model loaded successfully');
         },
         (progress) => {
-            // Прогресс загрузки
             const percent = (progress.loaded / progress.total * 100).toFixed(0);
             console.log(`📥 Loading: ${percent}%`);
         },
@@ -1613,12 +1623,16 @@ const loadChairModel = (onModelLoaded) => {
             console.error('❌ Error loading model:', error);
             const loaderEl = document.getElementById('modelLoader');
             if (loaderEl) {
-                loaderEl.innerHTML = '<p class="text-red-500 text-sm">Ошибка загрузки модели</p>';
+                loaderEl.innerHTML = `
+                    <div class="text-red-400 text-sm px-6 text-center">
+                        <p class="mb-2">Ошибка загрузки модели</p>
+                        <p class="text-xs text-gray-400">Проверьте консоль (F12)</p>
+                    </div>
+                `;
             }
         }
     );
 };
-
         const initWebGL = () => {
             if (webGLInitialized) return;
 
@@ -1631,6 +1645,15 @@ const loadChairModel = (onModelLoaded) => {
             scene.fog = new THREE.Fog(0x0a0a0a, 50, 150);
             
             camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+// Добавь OrbitControls
+const controls = new THREE.OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.autoRotate = isAutoRotating;
+controls.autoRotateSpeed = 1;
+controls.enablePan = false;
+controls.minDistance = 20;
+controls.maxDistance = 60;
             renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
             
             renderer.setSize(container.clientWidth, container.clientHeight);
@@ -1722,6 +1745,7 @@ loadChairModel((model) => {
 
             const animate = () => {
                 requestAnimationFrame(animate);
+    controls.update(); // Добавь эту строку
                 
                 if (isAutoRotating && !isDragging) {
                     chairGroup.rotation.y += 0.002;
